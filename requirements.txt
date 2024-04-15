@@ -1,0 +1,4 @@
+ipython
+PyQt5
+qt_material
+zhipuai
