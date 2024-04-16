@@ -8,6 +8,10 @@ ipython
 PyQt5
 qt_material
 zhipuai
+configparser
+simpleaudio
+PyAudio
+handyllm
 ```
 
 ## Quick Start

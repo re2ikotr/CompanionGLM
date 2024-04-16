@@ -8,7 +8,7 @@ from qt_material import apply_stylesheet
 
 from IPython import embed
 
-from chat import ChatWindow, ChatBlock
+from chat import ChatWindow, ChatBlock, initial_chat_history
 from audio import AudioRecord, AudioPlay
 from recognition import Recognition
 from generation import Generation
@@ -17,7 +17,7 @@ class Companion(QWidget):
     def __init__(self):
         super(Companion, self).__init__()
         # Init window settings
-        # self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint|Qt.SubWindow)
+        self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint|Qt.SubWindow)
         self.setAutoFillBackground(False)
         self.setAttribute(Qt.WA_TranslucentBackground, True)
 
@@ -125,6 +125,7 @@ class Companion(QWidget):
     # Pass the recognized text
     def talk(self, text):
         history = []
+        history.extend(initial_chat_history)
         history.append({
             'role': 'user',
             'content': text,
