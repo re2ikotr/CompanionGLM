@@ -17,13 +17,13 @@ class Companion(QWidget):
     def __init__(self):
         super(Companion, self).__init__()
         # Init window settings
-        self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint|Qt.SubWindow)
+        # self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint|Qt.SubWindow)
         self.setAutoFillBackground(False)
         self.setAttribute(Qt.WA_TranslucentBackground, True)
 
         # Load image
         self.avatar = QLabel(self)
-        self.avatar_path = 'resources/images/test/pathfinder2.png'
+        self.avatar_path = 'resources/images/test/待机.gif'
         self.movie = QMovie(self.avatar_path)
         self.avatar.setMovie(self.movie)
         self.movie.start()

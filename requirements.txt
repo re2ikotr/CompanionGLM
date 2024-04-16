@@ -5,3 +5,4 @@ zhipuai
 configparser
 simpleaudio
 PyAudio
+handyllm
