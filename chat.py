@@ -59,7 +59,7 @@ class ChatWindow(QWidget):
     def __init__(self):
         super(ChatWindow, self).__init__()
         self.setWindowTitle("chat")
-        # self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint|Qt.SubWindow)
+        self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint|Qt.SubWindow)
         self.resize(900, 600)
 
         self.init_UI()
