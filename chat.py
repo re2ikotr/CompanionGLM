@@ -3,6 +3,15 @@ import sys
 from PyQt5.QtGui import QFont, QKeySequence
 from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt5.QtWidgets import *
+from handyllm import PromptConverter
+
+file_name = "paimon4.txt"
+dir_name = "prompts"
+converter = PromptConverter()
+file_path = os.path.join(os.getcwd(), dir_name, file_name)
+initial_chat_history = converter.rawfile2chat(file_path)
+print("-------- 初始 prompt 内容:")
+print(initial_chat_history)
 
 from IPython import embed
 
@@ -29,13 +38,14 @@ class ChatWindow(QWidget):
     def __init__(self):
         super(ChatWindow, self).__init__()
         self.setWindowTitle("chat")
-        self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint|Qt.SubWindow)
+        # self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint|Qt.SubWindow)
         self.resize(900, 600)
 
         self.init_UI()
 
         # Chat history
         self.chat_history = []
+        self.chat_history.extend(initial_chat_history)
 
         # is waiting for response
         self.is_waiting = False
