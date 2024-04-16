@@ -2,7 +2,7 @@ import os
 import sys
 import configparser
 from PyQt5.QtGui import QMovie, QIcon, QImage, QPixmap, QCursor
-from PyQt5.QtCore import QByteArray, Qt
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from qt_material import apply_stylesheet
 
@@ -12,6 +12,7 @@ from chat import ChatWindow, ChatBlock, initial_chat_history
 from audio import AudioRecord, AudioPlay
 from recognition import Recognition
 from generation import Generation
+from preferences import EditPreferences
 
 class Companion(QWidget):
     def __init__(self):
@@ -46,6 +47,10 @@ class Companion(QWidget):
         self.chat_option.triggered.connect(self.chat)
         self.menu.addAction(self.chat_option)
 
+        self.preferences_option = QAction("Settings")
+        self.preferences_option.triggered.connect(self.edit_preferences)
+        self.menu.addAction(self.preferences_option)
+
         self.quit_option = QAction("Quit")
         self.quit_option.triggered.connect(self.quit)
         self.menu.addAction(self.quit_option)
@@ -58,7 +63,7 @@ class Companion(QWidget):
 
         # Record audio settings
         self.record = AudioRecord()
-        self.btn_record = QPushButton('录音', self)
+        self.btn_record = QPushButton('说话', self)
         self.btn_record.clicked.connect(self.change_record_status)
 
         # Speech recognition and generation
@@ -113,7 +118,7 @@ class Companion(QWidget):
             self.record.start()
             self.btn_record.setText('停止')
     def stop_record_received(self, _):
-        self.btn_record.setText('录音')
+        self.btn_record.setText('说话')
         self.send_for_recognition()
     
     # Speech recognition
@@ -144,6 +149,11 @@ class Companion(QWidget):
         config.read('config.ini')
         self.audioplay = AudioPlay('./data/audio/generated.wav')
         self.audioplay.start()
+
+    # Edit preferences
+    def edit_preferences(self):
+        self.preferences = EditPreferences()
+        self.preferences.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
