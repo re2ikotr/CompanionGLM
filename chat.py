@@ -13,18 +13,22 @@ initial_chat_history = converter.rawfile2chat(file_path)
 print("-------- 初始 prompt 内容:")
 print(initial_chat_history)
 
+import configparser
 from IPython import embed
 
 from zhipuai import ZhipuAI
 
-class Chat(QThread):
+class ChatStream(QThread):
     sign_response_text = pyqtSignal(tuple)
     def __init__(self, chat_history):
-        super(Chat, self).__init__()
+        super(ChatStream, self).__init__()
         self.messages = chat_history
     
     def run(self):
-        self.client = ZhipuAI(api_key='9b83a7263761fa941dda1d74208104e7.cTBTGVZemnRfpRue')
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+
+        self.client = ZhipuAI(api_key=config.get('zhipuai', 'api_key'))
         response = self.client.chat.completions.create(
             model="glm-4",  # 填写需要调用的模型名称
             messages=self.messages,
@@ -33,6 +37,23 @@ class Chat(QThread):
         for (i, chunk) in enumerate(response):
             self.sign_response_text.emit(tuple([i, chunk.choices[0].delta.content]))
         self.sign_response_text.emit(tuple([-1, '']))
+
+class ChatBlock(QThread):
+    sign_response_text = pyqtSignal(str)
+    def __init__(self, chat_history):
+        super(ChatBlock, self).__init__()
+        self.messages = chat_history
+    
+    def run(self):
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+
+        self.client = ZhipuAI(api_key=config.get('zhipuai', 'api_key'))
+        response = self.client.chat.completions.create(
+            model="glm-4",  # 填写需要调用的模型名称
+            messages=self.messages,
+        )
+        self.sign_response_text.emit(response.choices[0].message.content)
 
 class ChatWindow(QWidget):
     def __init__(self):
@@ -91,7 +112,7 @@ class ChatWindow(QWidget):
         self.text_send.clear()
 
         # Send text to the server in a new thread
-        self.chat_thread = Chat(self.chat_history)
+        self.chat_thread = ChatStream(self.chat_history)
         self.chat_thread.sign_response_text.connect(self.receive_text_response)
         self.chat_thread.start()
 

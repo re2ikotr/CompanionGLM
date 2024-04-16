@@ -1,13 +1,17 @@
 import os
 import sys
+import configparser
 from PyQt5.QtGui import QMovie, QIcon, QImage, QPixmap, QCursor
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QByteArray, Qt
 from PyQt5.QtWidgets import *
 from qt_material import apply_stylesheet
 
 from IPython import embed
 
-from chat import ChatWindow
+from chat import ChatWindow, ChatBlock
+from audio import AudioRecord, AudioPlay
+from recognition import Recognition
+from generation import Generation
 
 class Companion(QWidget):
     def __init__(self):
@@ -24,7 +28,7 @@ class Companion(QWidget):
         self.avatar.setMovie(self.movie)
         self.movie.start()
 
-        # resize window
+        # Resize window
         self.image = QImage(self.avatar_path)
         self.resize(self.image.width(), self.image.height())
         
@@ -51,6 +55,14 @@ class Companion(QWidget):
 
         # Prepare for dragging
         self.following_mouse = False
+
+        # Record audio settings
+        self.record = AudioRecord()
+        self.btn_record = QPushButton('录音', self)
+        self.btn_record.clicked.connect(self.change_record_status)
+
+        # Speech recognition and generation
+        # TODO: Add speech recognition and generation
 
         self.to_corner()
         self.show()
@@ -89,6 +101,48 @@ class Companion(QWidget):
         self.chat_window.move(self.pos().x() - self.chat_window.width() + 10,
                                self.pos().y() - self.chat_window.height() + 10)
         self.chat_window.show()
+
+    # Record audio
+    def change_record_status(self):
+        if self.record.is_recording:
+            self.record.is_recording = False
+        else:
+            self.record = AudioRecord()
+            self.record.sign_stopped.connect(self.stop_record_received)
+            self.record.is_recording = True
+            self.record.start()
+            self.btn_record.setText('停止')
+    def stop_record_received(self, _):
+        self.btn_record.setText('录音')
+        self.send_for_recognition()
+    
+    # Speech recognition
+    def send_for_recognition(self):
+        self.recognition = Recognition()
+        self.recognition.sign_recognition_text.connect(self.talk)
+        self.recognition.start()
+
+    # Pass the recognized text
+    def talk(self, text):
+        history = []
+        history.append({
+            'role': 'user',
+            'content': text,
+        })
+        self.chatblock = ChatBlock(history)
+        self.chatblock.sign_response_text.connect(self.send_for_generation)
+        self.chatblock.start()
+    
+    # Speech generation
+    def send_for_generation(self, text):
+        self.generation = Generation(text)
+        self.generation.sign_audio_generated.connect(self.play_generated_audio)
+        self.generation.start()
+    def play_generated_audio(self, _):
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        self.audioplay = AudioPlay('./data/audio/generated.wav')
+        self.audioplay.start()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
