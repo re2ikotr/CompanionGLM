@@ -19,7 +19,7 @@ class Companion(QWidget):
 
         # Load image
         self.avatar = QLabel(self)
-        self.avatar_path = 'resources/images/test/pathfinder2.png'
+        self.avatar_path = 'resources/images/test/待机.gif'
         self.movie = QMovie(self.avatar_path)
         self.avatar.setMovie(self.movie)
         self.movie.start()
