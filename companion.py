@@ -13,6 +13,7 @@ from audio import AudioRecord, AudioPlay
 from recognition import Recognition
 from generation import Generation
 from preferences import EditPreferences
+from ocr import ocr_img_text
 
 class Companion(QWidget):
     def __init__(self):
@@ -131,9 +132,10 @@ class Companion(QWidget):
     def talk(self, text):
         history = []
         history.extend(initial_chat_history)
+        text_with_screen_content = text + "\n" + "屏幕内容：\n" + ocr_img_text()[0]
         history.append({
             'role': 'user',
-            'content': text,
+            'content': text_with_screen_content,
         })
         self.chatblock = ChatBlock(history)
         self.chatblock.sign_response_text.connect(self.send_for_generation)
