@@ -6,3 +6,6 @@ configparser
 simpleaudio
 PyAudio
 handyllm
+paddlepaddle
+paddleocr
+pyautogui

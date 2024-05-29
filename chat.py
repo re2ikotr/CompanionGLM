@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt5.QtWidgets import *
 from handyllm import PromptConverter
 
-file_name = "paimon4.txt"
+file_name = "paimon5.txt"
 dir_name = "prompts"
 converter = PromptConverter()
 file_path = os.path.join(os.getcwd(), dir_name, file_name)
@@ -17,6 +17,8 @@ import configparser
 from IPython import embed
 
 from zhipuai import ZhipuAI
+
+from ocr import ocr_img_text
 
 class ChatStream(QThread):
     sign_response_text = pyqtSignal(tuple)
@@ -102,9 +104,10 @@ class ChatWindow(QWidget):
         if self.is_waiting:
             return
         text_to_send = self.text_send.toPlainText()
+        text_to_send_with_screen_content = text_to_send + "\n" + "屏幕内容：\n" + ocr_img_text()[0]
         self.chat_history.append({
             'role': 'user',
-            'content': text_to_send
+            'content': text_to_send_with_screen_content
         })
         self.is_waiting = True
         self.received_all = False
