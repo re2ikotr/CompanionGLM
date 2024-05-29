@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt5.QtWidgets import *
 from handyllm import PromptConverter
 
-file_name = "paimon4.txt"
+file_name = "paimon5.txt"
 dir_name = "prompts"
 converter = PromptConverter()
 file_path = os.path.join(os.getcwd(), dir_name, file_name)
