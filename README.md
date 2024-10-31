@@ -1,4 +1,4 @@
-# CompanionGLM
+# CompanionGLM: a desktop AI assistant based on [ChatGLM](chatglm.cn/) and PyQt5
 
 ## Requirements
 
@@ -16,11 +16,11 @@ handyllm
 
 ## Quick Start
 ```
-# 创建虚拟环境
+# create and activate virtual environment
 python -m venv .venv
-# 开启虚拟环境
 . .venv/bin/activate
-# 安装依赖
+# install dependencies
 pip install -r requirements.txt
 python companion.py
 ```
+Replace the api_key in config.ini with your valid key.
