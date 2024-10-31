@@ -1,4 +1,4 @@
-# CompanionGLM: a desktop AI assistant based on [ChatGLM](chatglm.cn/) and PyQt5
+# CompanionGLM: a desktop AI assistant based on [ChatGLM](https://chatglm.cn/) and PyQt5
 
 ## Requirements
 
